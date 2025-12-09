@@ -1,0 +1,46 @@
+import {
+  IsString,
+  IsNumber,
+  IsDateString,
+  IsNotEmpty,
+  Min,
+  IsBoolean,
+  IsOptional,
+  IsInt,
+} from 'class-validator';
+
+export class CreateExpenseDto {
+  @IsString({ message: 'Descrição deve ser uma string' })
+  @IsNotEmpty({ message: 'Descrição é obrigatória' })
+  description: string;
+
+  @IsNumber({}, { message: 'Valor deve ser um número' })
+  @IsNotEmpty({ message: 'Valor é obrigatório' })
+  @Min(0.01, { message: 'Valor deve ser maior que zero' })
+  amount: number;
+
+  @IsString({ message: 'Tipo deve ser uma string' })
+  @IsNotEmpty({ message: 'Tipo é obrigatório' })
+  type: string;
+
+  @IsString({ message: 'Frequência deve ser uma string' })
+  @IsNotEmpty({ message: 'Frequência é obrigatória' })
+  frequency: string;
+
+  @IsDateString({}, { message: 'Data deve ser uma data válida' })
+  @IsNotEmpty({ message: 'Data é obrigatória' })
+  date: string;
+
+  @IsBoolean({ message: 'isInstallment deve ser um booleano' })
+  @IsOptional()
+  isInstallment?: boolean;
+
+  @IsInt({ message: 'installmentCount deve ser um número inteiro' })
+  @Min(2, { message: 'installmentCount deve ser no mínimo 2' })
+  @IsOptional()
+  installmentCount?: number;
+
+  @IsBoolean({ message: 'firstInstallmentThisMonth deve ser um booleano' })
+  @IsOptional()
+  firstInstallmentThisMonth?: boolean;
+}
