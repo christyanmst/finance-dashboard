@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  gains     Gain[]
+  expenses  Expense[]
+  budgets   Budget[]
+
+  @@map("users")
+}
+
+model Gain {
+  id          Int      @id @default(autoincrement())
+  description String
+  amount      Float
+  type        String
+  frequency   String
+  date        DateTime
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("gains")
+}
+
+model Expense {
+  id                 Int      @id @default(autoincrement())
+  description        String
+  amount             Float
+  type               String
+  frequency          String
+  date               DateTime
+  userId             Int
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isInstallment      Boolean  @default(false)
+  installmentGroupId String?
+  installmentNumber  Int?
+  installmentTotal   Int?
+  originalAmount     Float?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("expenses")
+}
+
+model Budget {
+  id          Int      @id @default(autoincrement())
+  description String
+  amount      Float
+  type        String
+  month       Int
+  year        Int
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("budgets")
+  @@unique([userId, type, month, year])
+}
+
